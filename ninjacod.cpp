@@ -173,6 +173,7 @@ struct usersamarks
 			cout << "there are no results for this test or even category" << endl;
 		}
 	}
+
 	void pokasisection(string namesection)
 	{
 
@@ -636,6 +637,7 @@ public:
 	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class testy
 {
 	string name;
@@ -1495,6 +1497,11 @@ public:
 	}
 	void read()
 	{
+		if (section1.empty())
+		{
+			cout << "pysto" << endl;
+			return;
+		}
 		for (auto& sd : section1)
 		{
 			cout << "class:" << sd.getname() << endl;
@@ -1600,7 +1607,7 @@ public:
 		for (auto& sd : section1)
 		{
 
-			if (!sd.checkdyblickatestname(test))
+			if (sd.checkdyblickatestname(test))
 			{
 				perevirka2++;
 			}
@@ -1639,7 +1646,7 @@ public:
 		}
 		return false;
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	void correctanswerstest()
 	{
 
@@ -1797,7 +1804,7 @@ public:
 		return;
 
 	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	void daletesection()
 	{
 		cin.ignore();
@@ -2181,6 +2188,14 @@ public:
 			}
 		}
 	}
+	bool checkempty()
+	{
+		if (section1.empty())
+		{
+			return true;
+		}
+		return false;
+	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2518,10 +2533,11 @@ public:
 	}
 	void changenameadminorpas()
 	{
-		int sw = 0;
+
 		while (true)
 		{
-			cout << "1-name\n2-pas:" << endl;
+			int sw = 0;
+			cout << "1-name\n2-pas:\n3-exit" << endl;
 			cin >> sw;
 			if (sw == 1)
 			{
@@ -2715,6 +2731,12 @@ public:
 	}
 	void modificastionsd()
 	{
+		Loadvusers();
+		if (Users.empty())
+		{
+			cout << "empty" << endl;
+			return;
+		}
 		while (true) {
 			while (true) {
 				int count = 0;
@@ -2727,7 +2749,7 @@ public:
 					if (count == 1)
 					{
 						string newname;
-						printfullusers();
+						printfullusers1();
 						cout << "-00:exit\nenter the account number of which you want to change the name:";
 						if (cin >> count)
 						{
@@ -3016,6 +3038,29 @@ public:
 	void printfullusers()
 	{
 		Loadvusers();
+		if (Users.empty())
+		{
+			cout << "empty" << endl;
+			return;
+		}
+		int count = 0;
+		cout << "-----------------------------" << endl;
+		for (auto& sd1 : Users)
+		{
+			cout << ++count << ":" << "Name:" << sd1.getName() << endl;
+
+		}
+		cout << "-----------------------------" << endl;
+
+	}
+	void printfullusers1()
+	{
+		Loadvusers();
+		if (Users.empty())
+		{
+
+			return;
+		}
 		int count = 0;
 		cout << "-----------------------------" << endl;
 		for (auto& sd1 : Users)
@@ -3044,7 +3089,13 @@ public:
 			while (true)
 			{
 				int count = 0;
-				printfullusers();
+				Loadvusers();
+				printfullusers1();
+				if (Users.empty())
+				{
+					cout << "empty" << endl;
+					return;
+				}
 				cout << "exit-00\nenter number user:";
 				if (cin >> count)
 				{
@@ -3120,6 +3171,11 @@ public:
 				test.daleteans();
 				break;
 			case 5:
+				if (test.checkempty())
+				{
+					cout << "empty" << endl;
+					return;
+				}
 				test.clear1();
 				cout << "all clear" << endl;
 				break;
@@ -3147,18 +3203,38 @@ public:
 				addmanage();
 				break;
 			case 2:
+				if (test.checkempty())
+				{
+					cout << "empty" << endl;
+					break;
+				}
 				replacement();
 				break;
 			case 3:
+				if (test.checkempty())
+				{
+					cout << "empty" << endl;
+					break;
+				}
 				correctanswers();
 				break;
 			case 4:
 				importintofile();
 				break;
 			case 5:
+				if (test.checkempty())
+				{
+					cout << "empty" << endl;
+					break;
+				}
 				dalaletetest();
 				break;
 			case 7:
+				if (test.checkempty())
+				{
+					cout << "empty" << endl;
+					break;
+				}
 				test.read();
 				break;
 			case 8:
@@ -3171,10 +3247,16 @@ public:
 			}
 		}
 	}
+
 	void correctanswers()
 	{
-
+		if (test.checkempty())
+		{
+			cout << "empty" << endl;
+			return;
+		}
 		test.correctanswerstest();
+		test.importtest();
 	}
 	void replacement()
 	{
@@ -3344,7 +3426,7 @@ public:
 			cout << "enter task name:";
 			getline(cin, newtask);
 			newtask = " " + newtask;
-			cin.ignore();
+
 			if (test.checkdyblitestTask(section, test1, newtask))
 			{
 				cout << "add task" << endl;
@@ -3575,25 +3657,29 @@ public:
 	}
 	void viewtest()
 	{
-		int ch = 0;
-		cout << "1-see the results of the entire section\n2-see the results of the entire test\n3-All\n4-exit:";
-		cin >> ch;
-		switch (ch)
+		while (true)
 		{
-		case 1:
-			sectioncout();
-			break;
-		case 2:
-			testcout();
-			break;
-		case 3:
-			allcout();
-			break;
-		case 4:
-			break;
-		default:
-			break;
+			int ch = 0;
+			cout << "1-see the results of the entire section\n2-see the results of the entire test\n3-All\n4-exit:";
+			cin >> ch;
+			switch (ch)
+			{
+			case 1:
+				sectioncout();
+				break;
+			case 2:
+				testcout();
+				break;
+			case 3:
+				allcout();
+				break;
+			case 4:
+				return;
+			default:
+				break;
+			}
 		}
+
 	}
 	void takenewtest()
 	{
@@ -3845,7 +3931,7 @@ public:
 									string taskname;
 									taskname = slov;
 									test.addnametask(testname, sectionname, slov);
-
+									readansver();
 
 									string ans;
 									string dd;
@@ -3856,6 +3942,8 @@ public:
 									{
 
 
+
+										/*readansvervtest(taskname, sectionname, testname);*/
 
 										//cout << "pityshnia " << test.getnumtestqvision(sectionname, testname) << endl;
 										//if (test.getnumtestqvision(sectionname, testname)  <= 1)
@@ -4328,7 +4416,6 @@ public:
 
 int main()
 {
-
 	Testy prog;
 	prog.start();
 
